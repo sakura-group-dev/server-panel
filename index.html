@@ -1,88 +1,41 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Minecraft サーバーパネル</title>
-  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic&display=swap" rel="stylesheet">
+  <title>マイクラサーバー操作パネル</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Zen Maru Gothic', sans-serif;
-      background: url('https://images.unsplash.com/photo-1547721064-da6cfb341d50') no-repeat center center fixed;
-      background-size: cover;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-
-    .panel {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 20px;
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      padding: 40px;
+      font-family: Arial, sans-serif;
+      background: #222;
+      color: #0af;
       text-align: center;
-      width: 90%;
-      max-width: 400px;
-      color: #fff;
+      padding: 40px;
     }
-
-    .panel h1 {
-      font-size: 28px;
-      margin-bottom: 30px;
-    }
-
     button {
-      background-color: #00c853;
-      border: none;
+      font-size: 1.5rem;
       padding: 15px 30px;
+      margin: 20px;
+      background: #0af;
+      color: #fff;
+      border: none;
       border-radius: 10px;
-      color: white;
-      font-size: 18px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background 0.3s ease;
     }
-
     button:hover {
-      background-color: #00b140;
-    }
-
-    #log {
-      margin-top: 20px;
-      font-size: 16px;
-      color: #f1f1f1;
-      word-break: break-word;
+      background: #08c;
     }
   </style>
 </head>
 <body>
-  <div class="panel">
-    <h1>🌍 Minecraft サーバー パネル</h1>
-    <button onclick="startServer()">🟢 起動する</button>
-    <div id="log">サーバーを起動していません</div>
-  </div>
+  <h1>マイクラサーバー操作パネル</h1>
+  <button onclick="openColab()">Colabでサーバー起動</button>
 
   <script>
-    async function startServer() {
-      const log = document.getElementById("log");
-      log.innerText = "⏳ 起動中... 少し待ってください...";
-
-      try {
-        const res = await fetch("https://script.google.com/macros/s/【あなたのWebhook URL】/exec");
-        const text = await res.text();
-        log.innerText = "✅ 成功：" + text;
-      } catch (error) {
-        log.innerText = "❌ エラー：" + error.message;
-      }
+    function openColab() {
+      // ここにあなたのColabノートブックURLを入れてください
+      const colabUrl = "https://colab.research.google.com/drive/1pdpAa_yRIf6ri1M6zsgnOBgNBpldXxB7#scrollTo=rRR4iz1lwZ_d";
+      window.open(colabUrl, "_blank");
     }
   </script>
 </body>
