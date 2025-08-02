@@ -1,117 +1,114 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>サーバー操作パネル</title>
-  <style>
-    /* Reset */
-    * {
-      box-sizing: border-box;
-      margin: 0; padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    body, html {
-      height: 100%;
-      background: #1e2128;
-      color: #e1e3e8;
-    }
-    /* Layout */
-    .container {
-      display: flex;
-      height: 100vh;
-    }
-    /* Sidebar */
-    .sidebar {
-      width: 220px;
-      background: #272b33;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.5);
-    }
-    .sidebar h2 {
-      font-weight: 700;
-      font-size: 1.4rem;
-      color: #0f62fe;
-      text-align: center;
-      margin-bottom: 12px;
-      letter-spacing: 1px;
-    }
-    .sidebar button {
-      background: #0f62fe;
-      border: none;
-      border-radius: 6px;
-      padding: 12px 10px;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    .sidebar button:hover {
-      background: #0353e9;
-    }
-
-    /* Main Content */
-    .main {
-      flex-grow: 1;
-      padding: 30px 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      background: #22252e;
-    }
-    .main h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #0f62fe;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    /* Command input area */
-    .command-area {
-      display: flex;
-      gap: 12px;
-    }
-    .command-area input[type="text"] {
-      flex-grow: 1;
-      border-radius: 6px;
-      border: none;
-      padding: 12px 15px;
-      font-size: 1.1rem;
-    }
-    .command-area button {
-      background: #0f62fe;
-      border: none;
-      border-radius: 6px;
-      padding: 12px 20px;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    .command-area button:hover {
-      background: #0353e9;
-    }
-
-    /* Log display */
-    #log {
-      background: #1a1c22;
-      border-radius: 8px;
-      padding: 20px;
-      height: 320px;
-      overflow-y: auto;
-      font-family: monospace;
-      font-size: 0.9rem;
-      line-height: 1.4;
-      color: #d4d7dc;
-      box-shadow: inset 0 0 10px rgba(15, 98, 254, 0.3);
-      user-select: text;
-      white-space: pre-wrap;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Minecraft 操作パネル - Pterodactyl風</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+  /* ベースリセット */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  body, html {
+    height: 100%;
+    background-color: #1f2128;
+    color: #e0e2e7;
+  }
+  .container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+  /* サイドバー */
+  .sidebar {
+    width: 240px;
+    background-color: #292c33;
+    box-shadow: 3px 0 10px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+  }
+  .sidebar h2 {
+    color: #00b0f4;
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 40px;
+    user-select: none;
+    text-align: center;
+    letter-spacing: 1.2px;
+  }
+  .sidebar button {
+    background: linear-gradient(90deg, #00b0f4, #005f9e);
+    border: none;
+    color: white;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 18px;
+    transition: background 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0,176,244,0.5);
+  }
+  .sidebar button:hover {
+    background: linear-gradient(90deg, #005f9e, #00b0f4);
+    box-shadow: 0 4px 10px rgba(0,176,244,0.7);
+  }
+  /* メインエリア */
+  main {
+    flex-grow: 1;
+    background-color: #22252e;
+    padding: 40px 50px;
+    display: flex;
+    flex-direction: column;
+  }
+  main h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #00b0f4;
+    margin-bottom: 30px;
+    user-select: none;
+  }
+  .command-area {
+    display: flex;
+    margin-bottom: 30px;
+  }
+  .command-area input[type=text] {
+    flex-grow: 1;
+    font-size: 1.1rem;
+    padding: 14px 20px;
+    border-radius: 8px 0 0 8px;
+    border: none;
+    outline: none;
+  }
+  .command-area button {
+    padding: 14px 28px;
+    border-radius: 0 8px 8px 0;
+    border: none;
+    background: #00b0f4;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .command-area button:hover {
+    background: #005f9e;
+  }
+  /* ログ表示 */
+  #log {
+    flex-grow: 1;
+    background-color: #1b1d23;
+    border-radius: 12px;
+    padding: 20px;
+    color: #c7c9d0;
+    font-family: monospace;
+    font-size: 0.9rem;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    box-shadow: inset 0 0 15px #00b0f4aa;
+  }
+</style>
 </head>
 <body>
   <div class="container">
@@ -120,8 +117,7 @@
       <button id="startBtn">サーバー起動</button>
       <button id="stopBtn">サーバー停止</button>
     </nav>
-
-    <main class="main">
+    <main>
       <h1>サーバー操作パネル</h1>
       <div class="command-area">
         <input type="text" id="commandInput" placeholder="コマンドを入力" autocomplete="off" />
@@ -145,14 +141,10 @@
 
     startBtn.onclick = () => {
       appendLog('[INFO] サーバー起動コマンドを送信しました (仮)...');
-      // ここに起動処理のAPI呼び出しを入れる予定
     };
-
     stopBtn.onclick = () => {
       appendLog('[INFO] サーバー停止コマンドを送信しました (仮)...');
-      // ここに停止処理のAPI呼び出しを入れる予定
     };
-
     sendCmdBtn.onclick = () => {
       const cmd = commandInput.value.trim();
       if (!cmd) {
@@ -161,7 +153,6 @@
       }
       appendLog(`[COMMAND] ${cmd} を送信しました (仮)...`);
       commandInput.value = '';
-      // ここにコマンド送信APIの呼び出しを入れる予定
     };
   </script>
 </body>
