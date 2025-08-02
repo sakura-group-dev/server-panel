@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Minecraft 操作パネル - Pterodactyl風</title>
+<title>Minecraft操作パネル - Pterodactyl風</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
   /* ベースリセット */
@@ -13,9 +13,33 @@
   }
   body, html {
     height: 100%;
-    background-color: #1f2128;
-    color: #e0e2e7;
+    background-color: var(--bg);
+    color: var(--text);
+    transition: background-color 0.3s, color 0.3s;
   }
+  :root {
+    --bg: #1f2128;
+    --sidebar-bg: #292c33;
+    --main-bg: #22252e;
+    --btn-bg: linear-gradient(90deg, #00b0f4, #005f9e);
+    --btn-bg-hover: linear-gradient(90deg, #005f9e, #00b0f4);
+    --text: #e0e2e7;
+    --input-bg: #1b1d23;
+    --log-bg: #1b1d23;
+    --shadow-color: #00b0f4aa;
+  }
+  body.light {
+    --bg: #f9fafc;
+    --sidebar-bg: #e5e9f0;
+    --main-bg: #ffffff;
+    --btn-bg: linear-gradient(90deg, #1985ff, #0d47a1);
+    --btn-bg-hover: linear-gradient(90deg, #0d47a1, #1985ff);
+    --text: #222;
+    --input-bg: #f0f2f5;
+    --log-bg: #f0f2f5;
+    --shadow-color: #1985ff88;
+  }
+
   .container {
     display: flex;
     height: 100vh;
@@ -23,9 +47,9 @@
   }
   /* サイドバー */
   .sidebar {
-    width: 240px;
-    background-color: #292c33;
-    box-shadow: 3px 0 10px rgba(0,0,0,0.3);
+    width: 260px;
+    background-color: var(--sidebar-bg);
+    box-shadow: 3px 0 12px rgba(0,0,0,0.3);
     display: flex;
     flex-direction: column;
     padding: 30px 20px;
@@ -33,38 +57,58 @@
   .sidebar h2 {
     color: #00b0f4;
     font-weight: 700;
-    font-size: 1.8rem;
+    font-size: 2rem;
     margin-bottom: 40px;
     user-select: none;
     text-align: center;
     letter-spacing: 1.2px;
   }
   .sidebar button {
-    background: linear-gradient(90deg, #00b0f4, #005f9e);
+    background: var(--btn-bg);
     border: none;
     color: white;
-    padding: 14px 20px;
-    border-radius: 8px;
+    padding: 14px 22px;
+    border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
-    margin-bottom: 18px;
-    transition: background 0.3s ease;
-    box-shadow: 0 2px 6px rgba(0,176,244,0.5);
+    margin-bottom: 20px;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 3px 8px var(--shadow-color);
   }
   .sidebar button:hover {
-    background: linear-gradient(90deg, #005f9e, #00b0f4);
-    box-shadow: 0 4px 10px rgba(0,176,244,0.7);
+    background: var(--btn-bg-hover);
+    box-shadow: 0 6px 15px var(--shadow-color);
   }
+
+  /* ダーク/ライト切替ボタン */
+  .toggle-theme {
+    margin-top: auto;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+    user-select: none;
+    transition: color 0.3s ease;
+  }
+  .toggle-theme:hover {
+    color: #00b0f4;
+  }
+
   /* メインエリア */
   main {
     flex-grow: 1;
-    background-color: #22252e;
+    background-color: var(--main-bg);
     padding: 40px 50px;
     display: flex;
     flex-direction: column;
   }
   main h1 {
-    font-size: 2.4rem;
+    font-size: 2.6rem;
     font-weight: 700;
     color: #00b0f4;
     margin-bottom: 30px;
@@ -76,37 +120,44 @@
   }
   .command-area input[type=text] {
     flex-grow: 1;
-    font-size: 1.1rem;
-    padding: 14px 20px;
-    border-radius: 8px 0 0 8px;
+    font-size: 1.2rem;
+    padding: 16px 20px;
+    border-radius: 10px 0 0 10px;
     border: none;
     outline: none;
+    background-color: var(--input-bg);
+    color: var(--text);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .command-area input[type=text]::placeholder {
+    color: #7a7d84;
   }
   .command-area button {
-    padding: 14px 28px;
-    border-radius: 0 8px 8px 0;
+    padding: 16px 32px;
+    border-radius: 0 10px 10px 0;
     border: none;
-    background: #00b0f4;
+    background: var(--btn-bg);
     color: white;
     font-weight: 600;
     cursor: pointer;
     transition: background 0.3s ease;
   }
   .command-area button:hover {
-    background: #005f9e;
+    background: var(--btn-bg-hover);
   }
+
   /* ログ表示 */
   #log {
     flex-grow: 1;
-    background-color: #1b1d23;
-    border-radius: 12px;
-    padding: 20px;
-    color: #c7c9d0;
+    background-color: var(--log-bg);
+    border-radius: 14px;
+    padding: 24px;
+    color: var(--text);
     font-family: monospace;
     font-size: 0.9rem;
     overflow-y: auto;
     white-space: pre-wrap;
-    box-shadow: inset 0 0 15px #00b0f4aa;
+    box-shadow: inset 0 0 18px var(--shadow-color);
   }
 </style>
 </head>
@@ -116,6 +167,7 @@
       <h2>Minecraft</h2>
       <button id="startBtn">サーバー起動</button>
       <button id="stopBtn">サーバー停止</button>
+      <button class="toggle-theme" id="toggleThemeBtn">ライトモード切替</button>
     </nav>
     <main>
       <h1>サーバー操作パネル</h1>
@@ -133,6 +185,7 @@
     const sendCmdBtn = document.getElementById('sendCmdBtn');
     const commandInput = document.getElementById('commandInput');
     const log = document.getElementById('log');
+    const toggleThemeBtn = document.getElementById('toggleThemeBtn');
 
     function appendLog(message) {
       log.textContent += message + '\n';
@@ -141,9 +194,11 @@
 
     startBtn.onclick = () => {
       appendLog('[INFO] サーバー起動コマンドを送信しました (仮)...');
+      // ここにAPI呼び出しを追加予定
     };
     stopBtn.onclick = () => {
       appendLog('[INFO] サーバー停止コマンドを送信しました (仮)...');
+      // ここにAPI呼び出しを追加予定
     };
     sendCmdBtn.onclick = () => {
       const cmd = commandInput.value.trim();
@@ -153,6 +208,18 @@
       }
       appendLog(`[COMMAND] ${cmd} を送信しました (仮)...`);
       commandInput.value = '';
+      // ここにコマンド送信API呼び出し追加予定
+    };
+
+    // ライト・ダークモード切替
+    toggleThemeBtn.onclick = () => {
+      if(document.body.classList.contains('light')) {
+        document.body.classList.remove('light');
+        toggleThemeBtn.textContent = 'ライトモード切替';
+      } else {
+        document.body.classList.add('light');
+        toggleThemeBtn.textContent = 'ダークモード切替';
+      }
     };
   </script>
 </body>
