@@ -1,42 +1,168 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>マイクラサーバー操作パネル</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>サーバー操作パネル</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #222;
-      color: #0af;
-      text-align: center;
-      padding: 40px;
+    /* Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    button {
-      font-size: 1.5rem;
-      padding: 15px 30px;
-      margin: 20px;
-      background: #0af;
-      color: #fff;
+    body, html {
+      height: 100%;
+      background: #1e2128;
+      color: #e1e3e8;
+    }
+    /* Layout */
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background: #272b33;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.5);
+    }
+    .sidebar h2 {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: #0f62fe;
+      text-align: center;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    .sidebar button {
+      background: #0f62fe;
       border: none;
-      border-radius: 10px;
+      border-radius: 6px;
+      padding: 12px 10px;
+      color: white;
+      font-weight: 600;
       cursor: pointer;
       transition: background 0.3s ease;
     }
-    button:hover {
-      background: #08c;
+    .sidebar button:hover {
+      background: #0353e9;
+    }
+
+    /* Main Content */
+    .main {
+      flex-grow: 1;
+      padding: 30px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: #22252e;
+    }
+    .main h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0f62fe;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* Command input area */
+    .command-area {
+      display: flex;
+      gap: 12px;
+    }
+    .command-area input[type="text"] {
+      flex-grow: 1;
+      border-radius: 6px;
+      border: none;
+      padding: 12px 15px;
+      font-size: 1.1rem;
+    }
+    .command-area button {
+      background: #0f62fe;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 20px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .command-area button:hover {
+      background: #0353e9;
+    }
+
+    /* Log display */
+    #log {
+      background: #1a1c22;
+      border-radius: 8px;
+      padding: 20px;
+      height: 320px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #d4d7dc;
+      box-shadow: inset 0 0 10px rgba(15, 98, 254, 0.3);
+      user-select: text;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
-  <h1>マイクラサーバー操作パネル</h1>
-  <button onclick="openColab()">Colabでサーバー起動</button>
+  <div class="container">
+    <nav class="sidebar">
+      <h2>Minecraft</h2>
+      <button id="startBtn">サーバー起動</button>
+      <button id="stopBtn">サーバー停止</button>
+    </nav>
+
+    <main class="main">
+      <h1>サーバー操作パネル</h1>
+      <div class="command-area">
+        <input type="text" id="commandInput" placeholder="コマンドを入力" autocomplete="off" />
+        <button id="sendCmdBtn">送信</button>
+      </div>
+      <pre id="log">ログ表示エリア</pre>
+    </main>
+  </div>
 
   <script>
-    function openColab() {
-      // ここにあなたのColabノートブックURLを入れてください
-      const colabUrl = "https://colab.research.google.com/drive/1pdpAa_yRIf6ri1M6zsgnOBgNBpldXxB7#scrollTo=rRR4iz1lwZ_d";
-      window.open(colabUrl, "_blank");
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const sendCmdBtn = document.getElementById('sendCmdBtn');
+    const commandInput = document.getElementById('commandInput');
+    const log = document.getElementById('log');
+
+    function appendLog(message) {
+      log.textContent += message + '\n';
+      log.scrollTop = log.scrollHeight;
     }
+
+    startBtn.onclick = () => {
+      appendLog('[INFO] サーバー起動コマンドを送信しました (仮)...');
+      // ここに起動処理のAPI呼び出しを入れる予定
+    };
+
+    stopBtn.onclick = () => {
+      appendLog('[INFO] サーバー停止コマンドを送信しました (仮)...');
+      // ここに停止処理のAPI呼び出しを入れる予定
+    };
+
+    sendCmdBtn.onclick = () => {
+      const cmd = commandInput.value.trim();
+      if (!cmd) {
+        alert('コマンドを入力してください');
+        return;
+      }
+      appendLog(`[COMMAND] ${cmd} を送信しました (仮)...`);
+      commandInput.value = '';
+      // ここにコマンド送信APIの呼び出しを入れる予定
+    };
   </script>
 </body>
 </html>
