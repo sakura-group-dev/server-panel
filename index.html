@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Minecraft操作パネル - Pterodactyl風</title>
+<title>Minecraft操作パネル - Pterodactyl風（折りたたみ＆起動時間表示）</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-  /* ベースリセット */
   * {
     margin: 0; padding: 0; box-sizing: border-box;
     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -53,6 +52,11 @@
     display: flex;
     flex-direction: column;
     padding: 30px 20px;
+    transition: width 0.3s ease;
+  }
+  .sidebar.collapsed {
+    width: 70px;
+    padding: 30px 10px;
   }
   .sidebar h2 {
     color: #00b0f4;
@@ -62,6 +66,14 @@
     user-select: none;
     text-align: center;
     letter-spacing: 1.2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sidebar.collapsed h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 30px;
   }
   .sidebar button {
     background: var(--btn-bg);
@@ -74,10 +86,44 @@
     margin-bottom: 20px;
     transition: background 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 3px 8px var(--shadow-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sidebar.collapsed button {
+    padding: 14px 6px;
+    font-size: 0;
+    position: relative;
+  }
+  .sidebar.collapsed button::after {
+    content: attr(data-short);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.3rem;
+    color: white;
+    font-weight: 700;
   }
   .sidebar button:hover {
     background: var(--btn-bg-hover);
     box-shadow: 0 6px 15px var(--shadow-color);
+  }
+
+  /* 折りたたみボタン */
+  .collapse-btn {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 1.8rem;
+    cursor: pointer;
+    margin-bottom: 40px;
+    user-select: none;
+    transition: color 0.3s ease;
+  }
+  .collapse-btn:hover {
+    color: #00b0f4;
   }
 
   /* ダーク/ライト切替ボタン */
@@ -94,6 +140,7 @@
     text-align: center;
     user-select: none;
     transition: color 0.3s ease;
+    white-space: nowrap;
   }
   .toggle-theme:hover {
     color: #00b0f4;
@@ -111,9 +158,18 @@
     font-size: 2.6rem;
     font-weight: 700;
     color: #00b0f4;
+    margin-bottom: 8px;
+    user-select: none;
+  }
+  /* 経過時間表示 */
+  #uptime {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #a0a4aa;
     margin-bottom: 30px;
     user-select: none;
   }
+
   .command-area {
     display: flex;
     margin-bottom: 30px;
@@ -163,14 +219,16 @@
 </head>
 <body>
   <div class="container">
-    <nav class="sidebar">
+    <nav class="sidebar" id="sidebar">
+      <button class="collapse-btn" id="collapseBtn" title="折りたたみ切替">≡</button>
       <h2>Minecraft</h2>
-      <button id="startBtn">サーバー起動</button>
-      <button id="stopBtn">サーバー停止</button>
+      <button id="startBtn" data-short="▶︎">サーバー起動</button>
+      <button id="stopBtn" data-short="■">サーバー停止</button>
       <button class="toggle-theme" id="toggleThemeBtn">ライトモード切替</button>
     </nav>
     <main>
       <h1>サーバー操作パネル</h1>
+      <div id="uptime">サーバー停止中</div>
       <div class="command-area">
         <input type="text" id="commandInput" placeholder="コマンドを入力" autocomplete="off" />
         <button id="sendCmdBtn">送信</button>
@@ -180,26 +238,50 @@
   </div>
 
   <script>
+    const sidebar = document.getElementById('sidebar');
+    const collapseBtn = document.getElementById('collapseBtn');
     const startBtn = document.getElementById('startBtn');
     const stopBtn = document.getElementById('stopBtn');
     const sendCmdBtn = document.getElementById('sendCmdBtn');
     const commandInput = document.getElementById('commandInput');
     const log = document.getElementById('log');
     const toggleThemeBtn = document.getElementById('toggleThemeBtn');
+    const uptimeDisplay = document.getElementById('uptime');
+
+    let uptimeSeconds = 0;
+    let uptimeInterval = null;
 
     function appendLog(message) {
       log.textContent += message + '\n';
       log.scrollTop = log.scrollHeight;
     }
 
+    collapseBtn.onclick = () => {
+      sidebar.classList.toggle('collapsed');
+    };
+
     startBtn.onclick = () => {
       appendLog('[INFO] サーバー起動コマンドを送信しました (仮)...');
+      if (uptimeInterval) clearInterval(uptimeInterval);
+      uptimeSeconds = 0;
+      uptimeDisplay.textContent = '起動中: 0秒';
+      uptimeInterval = setInterval(() => {
+        uptimeSeconds++;
+        uptimeDisplay.textContent = `起動中: ${uptimeSeconds}秒`;
+      }, 1000);
       // ここにAPI呼び出しを追加予定
     };
+
     stopBtn.onclick = () => {
       appendLog('[INFO] サーバー停止コマンドを送信しました (仮)...');
+      if (uptimeInterval) {
+        clearInterval(uptimeInterval);
+        uptimeInterval = null;
+      }
+      uptimeDisplay.textContent = 'サーバー停止中';
       // ここにAPI呼び出しを追加予定
     };
+
     sendCmdBtn.onclick = () => {
       const cmd = commandInput.value.trim();
       if (!cmd) {
@@ -211,7 +293,6 @@
       // ここにコマンド送信API呼び出し追加予定
     };
 
-    // ライト・ダークモード切替
     toggleThemeBtn.onclick = () => {
       if(document.body.classList.contains('light')) {
         document.body.classList.remove('light');
